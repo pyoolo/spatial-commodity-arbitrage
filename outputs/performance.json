@@ -1,0 +1,14 @@
+{
+  "total_return_pct": 717.0438949672858,
+  "cagr_pct": 102.54169997708131,
+  "ann_vol_pct": 11.912982694476131,
+  "sharpe": 5.999141230563043,
+  "max_drawdown_pct": -5.538844970832835,
+  "n_trades": 259,
+  "win_rate_pct": 84.94208494208493,
+  "avg_win_usd": 2032903.4791706067,
+  "avg_loss_usd": -436216.11377338215,
+  "profit_factor": 26.288943231677983,
+  "total_trade_pnl_usd": 430226336.98037153,
+  "final_equity_usd": 490226336.9803715
+}

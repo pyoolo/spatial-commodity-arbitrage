@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_02d2e7b74b481b229eef352e1a7746b4 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    <div style="position: fixed; top: 10px; left: 50px; z-index: 9999;background: white; padding: 8px 14px; border-radius: 8px;box-shadow: 0 1px 4px rgba(0,0,0,.3); font-family: sans-serif;"><b>Geographic Arbitrage — soybean network</b><br><span style="font-size:12px;color:#555">Snapshot: 2024-11-15 &nbsp;|&nbsp; <span style="color:green">●</span> window open &nbsp; <span style="color:#999">●</span> closed &nbsp;(synthetic data)</span></div>
+    
+            <div class="folium-map" id="map_02d2e7b74b481b229eef352e1a7746b4" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_02d2e7b74b481b229eef352e1a7746b4 = L.map(
+                "map_02d2e7b74b481b229eef352e1a7746b4",
+                {
+                    center: [20.0, 0.0],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 2,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_dee2c752ee025722bc319cf845fd3e00 = L.tileLayer(
+                "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 20,
+  "maxNativeZoom": 20,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"https://carto.com/attributions\"\u003eCARTO\u003c/a\u003e",
+  "subdomains": "abcd",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_dee2c752ee025722bc319cf845fd3e00.addTo(map_02d2e7b74b481b229eef352e1a7746b4);
+        
+    
+            var circle_marker_0d9d926759472ee78c8b23def7e60732 = L.circleMarker(
+                [-23.96, -46.3],
+                {"bubblingMouseEvents": true, "color": "#1f6f43", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f6f43", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_02d2e7b74b481b229eef352e1a7746b4);
+        
+    
+            circle_marker_0d9d926759472ee78c8b23def7e60732.bindTooltip(
+                `<div>
+                     Santos, Brazil (origin)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_3b81a27874eea9e537a6e8456f7ccc65 = L.circleMarker(
+                [-25.52, -48.51],
+                {"bubblingMouseEvents": true, "color": "#1f6f43", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f6f43", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_02d2e7b74b481b229eef352e1a7746b4);
+        
+    
+            circle_marker_3b81a27874eea9e537a6e8456f7ccc65.bindTooltip(
+                `<div>
+                     Paranagua, Brazil (origin)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_016bbd4874fae5ae59f39aa9f4b2e2f5 = L.circleMarker(
+                [-32.95, -60.65],
+                {"bubblingMouseEvents": true, "color": "#1f6f43", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f6f43", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_02d2e7b74b481b229eef352e1a7746b4);
+        
+    
+            circle_marker_016bbd4874fae5ae59f39aa9f4b2e2f5.bindTooltip(
+                `<div>
+                     Rosario (Up-River), Argentina (origin)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_4a1466c6cee124a602642934a19bbd1f = L.circleMarker(
+                [29.95, -90.07],
+                {"bubblingMouseEvents": true, "color": "#1f6f43", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f6f43", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_02d2e7b74b481b229eef352e1a7746b4);
+        
+    
+            circle_marker_4a1466c6cee124a602642934a19bbd1f.bindTooltip(
+                `<div>
+                     New Orleans (US Gulf), USA (origin)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_c60127c7321f160b394cbf1f4bbacc57 = L.circleMarker(
+                [36.07, 120.38],
+                {"bubblingMouseEvents": true, "color": "#b3402a", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#b3402a", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_02d2e7b74b481b229eef352e1a7746b4);
+        
+    
+            circle_marker_c60127c7321f160b394cbf1f4bbacc57.bindTooltip(
+                `<div>
+                     Qingdao, China (destination)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_fd4a4b9885d3a9899df83a8753028da6 = L.circleMarker(
+                [32.01, 120.86],
+                {"bubblingMouseEvents": true, "color": "#b3402a", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#b3402a", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_02d2e7b74b481b229eef352e1a7746b4);
+        
+    
+            circle_marker_fd4a4b9885d3a9899df83a8753028da6.bindTooltip(
+                `<div>
+                     Nantong, China (destination)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_e9ad23baf37d6db0f26390d518fd8769 = L.circleMarker(
+                [51.95, 4.14],
+                {"bubblingMouseEvents": true, "color": "#b3402a", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#b3402a", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_02d2e7b74b481b229eef352e1a7746b4);
+        
+    
+            circle_marker_e9ad23baf37d6db0f26390d518fd8769.bindTooltip(
+                `<div>
+                     Rotterdam, Netherlands (destination)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_939df9a3814e3fe2d627d37e043e63e3 = L.circleMarker(
+                [41.35, 2.16],
+                {"bubblingMouseEvents": true, "color": "#b3402a", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#b3402a", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 7, "stroke": true, "weight": 3}
+            ).addTo(map_02d2e7b74b481b229eef352e1a7746b4);
+        
+    
+            circle_marker_939df9a3814e3fe2d627d37e043e63e3.bindTooltip(
+                `<div>
+                     Barcelona, Spain (destination)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_7a7ad4225dd49a385d245c316f7e5aca = L.polyline(
+                [[-23.96, -46.3], [36.07, 120.38]],
+                {"bubblingMouseEvents": true, "color": "#b0b0b0", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#b0b0b0", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.4, "smoothFactor": 1.0, "stroke": true, "weight": 1.8014284828919886}
+            ).addTo(map_02d2e7b74b481b229eef352e1a7746b4);
+        
+    
+        var popup_60f3ddb15dee5bf9faf67ba1ce287f4c = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_8f49408a77b34918d774a5e80742c0f7 = $(`<div id="html_8f49408a77b34918d774a5e80742c0f7" style="width: 100.0%; height: 100.0%;">BR_SANTOS → CN_QINGDAO<br>margin: -7.4 USD/t<br>delivered: 308.8 | dest price: 301.4<br>freight: 76.5 | 31 days at sea</div>`)[0];
+                popup_60f3ddb15dee5bf9faf67ba1ce287f4c.setContent(html_8f49408a77b34918d774a5e80742c0f7);
+            
+        
+
+        poly_line_7a7ad4225dd49a385d245c316f7e5aca.bindPopup(popup_60f3ddb15dee5bf9faf67ba1ce287f4c)
+        ;
+
+        
+    
+    
+            var poly_line_258a119167c7b527fac43d079e227da5 = L.polyline(
+                [[-23.96, -46.3], [32.01, 120.86]],
+                {"bubblingMouseEvents": true, "color": "#2e8b57", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#2e8b57", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.75, "smoothFactor": 1.0, "stroke": true, "weight": 2.1054283549129416}
+            ).addTo(map_02d2e7b74b481b229eef352e1a7746b4);
+        
+    
+        var popup_1fec36b5cb015cdd7d8e225fcba235bd = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_60f612a23541c715376bc756442b8bfb = $(`<div id="html_60f612a23541c715376bc756442b8bfb" style="width: 100.0%; height: 100.0%;">BR_SANTOS → CN_NANTONG<br>margin: 14.8 USD/t<br>delivered: 309.8 | dest price: 324.6<br>freight: 77.6 | 32 days at sea</div>`)[0];
+                popup_1fec36b5cb015cdd7d8e225fcba235bd.setContent(html_60f612a23541c715376bc756442b8bfb);
+            
+        
+
+        poly_line_258a119167c7b527fac43d079e227da5.bindPopup(popup_1fec36b5cb015cdd7d8e225fcba235bd)
+        ;
+
+        
+    
+    
+            var poly_line_17f990ba3fff4709e06a35eb5d5e6e6f = L.polyline(
+                [[-23.96, -46.3], [51.95, 4.14]],
+                {"bubblingMouseEvents": true, "color": "#2e8b57", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#2e8b57", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.75, "smoothFactor": 1.0, "stroke": true, "weight": 1.8930243734761256}
+            ).addTo(map_02d2e7b74b481b229eef352e1a7746b4);
+        
+    
+        var popup_adfecd07319810317e9cae8de50af103 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_6b6f05a4e7f93bb1446f9646bd5e411e = $(`<div id="html_6b6f05a4e7f93bb1446f9646bd5e411e" style="width: 100.0%; height: 100.0%;">BR_SANTOS → NL_ROTTERDAM<br>margin: 9.6 USD/t<br>delivered: 284.5 | dest price: 294.1<br>freight: 53.8 | 17 days at sea</div>`)[0];
+                popup_adfecd07319810317e9cae8de50af103.setContent(html_6b6f05a4e7f93bb1446f9646bd5e411e);
+            
+        
+
+        poly_line_17f990ba3fff4709e06a35eb5d5e6e6f.bindPopup(popup_adfecd07319810317e9cae8de50af103)
+        ;
+
+        
+    
+    
+            var poly_line_9646cf1d139aad319df94f465556f506 = L.polyline(
+                [[-23.96, -46.3], [41.35, 2.16]],
+                {"bubblingMouseEvents": true, "color": "#2e8b57", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#2e8b57", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.75, "smoothFactor": 1.0, "stroke": true, "weight": 2.4281987137115038}
+            ).addTo(map_02d2e7b74b481b229eef352e1a7746b4);
+        
+    
+        var popup_74afea3084de648defabff3a5eff4506 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_6b216d3fc8fe92c886518610aba1c3b4 = $(`<div id="html_6b216d3fc8fe92c886518610aba1c3b4" style="width: 100.0%; height: 100.0%;">BR_SANTOS → ES_BARCELONA<br>margin: 22.7 USD/t<br>delivered: 284.8 | dest price: 307.5<br>freight: 53.7 | 15 days at sea</div>`)[0];
+                popup_74afea3084de648defabff3a5eff4506.setContent(html_6b216d3fc8fe92c886518610aba1c3b4);
+            
+        
+
+        poly_line_9646cf1d139aad319df94f465556f506.bindPopup(popup_74afea3084de648defabff3a5eff4506)
+        ;
+
+        
+    
+    
+            var poly_line_54e68bd1b0218eedefaf9acada23e5be = L.polyline(
+                [[-25.52, -48.51], [36.07, 120.38]],
+                {"bubblingMouseEvents": true, "color": "#b0b0b0", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#b0b0b0", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.4, "smoothFactor": 1.0, "stroke": true, "weight": 3.122424339350026}
+            ).addTo(map_02d2e7b74b481b229eef352e1a7746b4);
+        
+    
+        var popup_f89c1f6cd8e307453f3c7934beae7fc2 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_d9f47ee1328dd0d07a87905b3bb83e79 = $(`<div id="html_d9f47ee1328dd0d07a87905b3bb83e79" style="width: 100.0%; height: 100.0%;">BR_PARANAGUA → CN_QINGDAO<br>margin: -39.7 USD/t<br>delivered: 341.1 | dest price: 301.4<br>freight: 103.5 | 32 days at sea</div>`)[0];
+                popup_f89c1f6cd8e307453f3c7934beae7fc2.setContent(html_d9f47ee1328dd0d07a87905b3bb83e79);
+            
+        
+
+        poly_line_54e68bd1b0218eedefaf9acada23e5be.bindPopup(popup_f89c1f6cd8e307453f3c7934beae7fc2)
+        ;
+
+        
+    
+    
+            var poly_line_aa1334484bf96bacb27ef8106d637452 = L.polyline(
+                [[-25.52, -48.51], [32.01, 120.86]],
+                {"bubblingMouseEvents": true, "color": "#b0b0b0", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#b0b0b0", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.4, "smoothFactor": 1.0, "stroke": true, "weight": 1.6276073015985273}
+            ).addTo(map_02d2e7b74b481b229eef352e1a7746b4);
+        
+    
+        var popup_d545a286d89289a064398e56d12a7c46 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_fcf26ab3ea54ed6f0239119409589c05 = $(`<div id="html_fcf26ab3ea54ed6f0239119409589c05" style="width: 100.0%; height: 100.0%;">BR_PARANAGUA → CN_NANTONG<br>margin: -3.1 USD/t<br>delivered: 327.7 | dest price: 324.6<br>freight: 90.1 | 32 days at sea</div>`)[0];
+                popup_d545a286d89289a064398e56d12a7c46.setContent(html_fcf26ab3ea54ed6f0239119409589c05);
+            
+        
+
+        poly_line_aa1334484bf96bacb27ef8106d637452.bindPopup(popup_d545a286d89289a064398e56d12a7c46)
+        ;
+
+        
+    
+    
+            var poly_line_9e17257061d7094a330bc7ba7590e0c9 = L.polyline(
+                [[-25.52, -48.51], [51.95, 4.14]],
+                {"bubblingMouseEvents": true, "color": "#2e8b57", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#2e8b57", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.75, "smoothFactor": 1.0, "stroke": true, "weight": 1.7279717237120213}
+            ).addTo(map_02d2e7b74b481b229eef352e1a7746b4);
+        
+    
+        var popup_fdf9d13fc3f8071f8c0d54918c1cb2d0 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_5461303aaa1f09ebd057d8acb6e5257f = $(`<div id="html_5461303aaa1f09ebd057d8acb6e5257f" style="width: 100.0%; height: 100.0%;">BR_PARANAGUA → NL_ROTTERDAM<br>margin: 5.6 USD/t<br>delivered: 288.5 | dest price: 294.1<br>freight: 52.4 | 17 days at sea</div>`)[0];
+                popup_fdf9d13fc3f8071f8c0d54918c1cb2d0.setContent(html_5461303aaa1f09ebd057d8acb6e5257f);
+            
+        
+
+        poly_line_9e17257061d7094a330bc7ba7590e0c9.bindPopup(popup_fdf9d13fc3f8071f8c0d54918c1cb2d0)
+        ;
+
+        
+    
+    
+            var poly_line_a3bb314176e90d8e7c3f15fef9736191 = L.polyline(
+                [[-25.52, -48.51], [41.35, 2.16]],
+                {"bubblingMouseEvents": true, "color": "#2e8b57", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#2e8b57", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.75, "smoothFactor": 1.0, "stroke": true, "weight": 2.2598267908172924}
+            ).addTo(map_02d2e7b74b481b229eef352e1a7746b4);
+        
+    
+        var popup_f32666a91f78c3c1fbdab2a44efe1a5e = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_111af4106d1fcf61f46006ea5f3fdf69 = $(`<div id="html_111af4106d1fcf61f46006ea5f3fdf69" style="width: 100.0%; height: 100.0%;">BR_PARANAGUA → ES_BARCELONA<br>margin: 18.6 USD/t<br>delivered: 288.9 | dest price: 307.5<br>freight: 52.4 | 16 days at sea</div>`)[0];
+                popup_f32666a91f78c3c1fbdab2a44efe1a5e.setContent(html_111af4106d1fcf61f46006ea5f3fdf69);
+            
+        
+
+        poly_line_a3bb314176e90d8e7c3f15fef9736191.bindPopup(popup_f32666a91f78c3c1fbdab2a44efe1a5e)
+        ;
+
+        
+    
+    
+            var poly_line_3f012422012f42d82278fb42fcf60bef = L.polyline(
+                [[-32.95, -60.65], [36.07, 120.38]],
+                {"bubblingMouseEvents": true, "color": "#b0b0b0", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#b0b0b0", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.4, "smoothFactor": 1.0, "stroke": true, "weight": 6.5}
+            ).addTo(map_02d2e7b74b481b229eef352e1a7746b4);
+        
+    
+        var popup_941e1cd7a6f61603d1a1c8b906866920 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_c1ca84eb20d1ed57a593fed690a1d27b = $(`<div id="html_c1ca84eb20d1ed57a593fed690a1d27b" style="width: 100.0%; height: 100.0%;">AR_ROSARIO → CN_QINGDAO<br>margin: -122.5 USD/t<br>delivered: 423.8 | dest price: 301.4<br>freight: 104.0 | 34 days at sea</div>`)[0];
+                popup_941e1cd7a6f61603d1a1c8b906866920.setContent(html_c1ca84eb20d1ed57a593fed690a1d27b);
+            
+        
+
+        poly_line_3f012422012f42d82278fb42fcf60bef.bindPopup(popup_941e1cd7a6f61603d1a1c8b906866920)
+        ;
+
+        
+    
+    
+            var poly_line_7694a99ba19c86c3657f20f63a0a86db = L.polyline(
+                [[-32.95, -60.65], [32.01, 120.86]],
+                {"bubblingMouseEvents": true, "color": "#b0b0b0", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#b0b0b0", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.4, "smoothFactor": 1.0, "stroke": true, "weight": 5.174832223515757}
+            ).addTo(map_02d2e7b74b481b229eef352e1a7746b4);
+        
+    
+        var popup_3b55feb31355c6ceec590db609a7c238 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_77d771a935cf086794382cba29c8b5ea = $(`<div id="html_77d771a935cf086794382cba29c8b5ea" style="width: 100.0%; height: 100.0%;">AR_ROSARIO → CN_NANTONG<br>margin: -90.0 USD/t<br>delivered: 414.6 | dest price: 324.6<br>freight: 94.8 | 34 days at sea</div>`)[0];
+                popup_3b55feb31355c6ceec590db609a7c238.setContent(html_77d771a935cf086794382cba29c8b5ea);
+            
+        
+
+        poly_line_7694a99ba19c86c3657f20f63a0a86db.bindPopup(popup_3b55feb31355c6ceec590db609a7c238)
+        ;
+
+        
+    
+    
+            var poly_line_afc0cbc94cb971eee14882a82f50044c = L.polyline(
+                [[-32.95, -60.65], [51.95, 4.14]],
+                {"bubblingMouseEvents": true, "color": "#b0b0b0", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#b0b0b0", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.4, "smoothFactor": 1.0, "stroke": true, "weight": 5.047910228486966}
+            ).addTo(map_02d2e7b74b481b229eef352e1a7746b4);
+        
+    
+        var popup_61b1a6e9985e00a663e746d6288d7199 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_d3b27bb952763ff69510ea20abe67717 = $(`<div id="html_d3b27bb952763ff69510ea20abe67717" style="width: 100.0%; height: 100.0%;">AR_ROSARIO → NL_ROTTERDAM<br>margin: -86.9 USD/t<br>delivered: 381.0 | dest price: 294.1<br>freight: 62.9 | 20 days at sea</div>`)[0];
+                popup_61b1a6e9985e00a663e746d6288d7199.setContent(html_d3b27bb952763ff69510ea20abe67717);
+            
+        
+
+        poly_line_afc0cbc94cb971eee14882a82f50044c.bindPopup(popup_61b1a6e9985e00a663e746d6288d7199)
+        ;
+
+        
+    
+    
+            var poly_line_03698ff52f5312a98770d8703909bf07 = L.polyline(
+                [[-32.95, -60.65], [41.35, 2.16]],
+                {"bubblingMouseEvents": true, "color": "#b0b0b0", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#b0b0b0", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.4, "smoothFactor": 1.0, "stroke": true, "weight": 4.925121410463511}
+            ).addTo(map_02d2e7b74b481b229eef352e1a7746b4);
+        
+    
+        var popup_ed219fdc07535219e4f5d4edbeb9c4ef = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_a9961c76427276559e946baa05cfcfe6 = $(`<div id="html_a9961c76427276559e946baa05cfcfe6" style="width: 100.0%; height: 100.0%;">AR_ROSARIO → ES_BARCELONA<br>margin: -83.9 USD/t<br>delivered: 391.4 | dest price: 307.5<br>freight: 72.9 | 18 days at sea</div>`)[0];
+                popup_ed219fdc07535219e4f5d4edbeb9c4ef.setContent(html_a9961c76427276559e946baa05cfcfe6);
+            
+        
+
+        poly_line_03698ff52f5312a98770d8703909bf07.bindPopup(popup_ed219fdc07535219e4f5d4edbeb9c4ef)
+        ;
+
+        
+    
+    
+            var poly_line_1a2a9e76c79b2cd1fd3833c00607a2d7 = L.polyline(
+                [[29.95, -90.07], [36.07, 120.38]],
+                {"bubblingMouseEvents": true, "color": "#b0b0b0", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#b0b0b0", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.4, "smoothFactor": 1.0, "stroke": true, "weight": 1.5416689593195447}
+            ).addTo(map_02d2e7b74b481b229eef352e1a7746b4);
+        
+    
+        var popup_65c6790ab2a6007966e62bc1a288ec42 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_c25b44c266f013302cf6573e31459aef = $(`<div id="html_c25b44c266f013302cf6573e31459aef" style="width: 100.0%; height: 100.0%;">US_NOLA → CN_QINGDAO<br>margin: -1.0 USD/t<br>delivered: 302.4 | dest price: 301.4<br>freight: 68.1 | 21 days at sea</div>`)[0];
+                popup_65c6790ab2a6007966e62bc1a288ec42.setContent(html_c25b44c266f013302cf6573e31459aef);
+            
+        
+
+        poly_line_1a2a9e76c79b2cd1fd3833c00607a2d7.bindPopup(popup_65c6790ab2a6007966e62bc1a288ec42)
+        ;
+
+        
+    
+    
+            var poly_line_3ca06a70885c52b6a2258044e7cbbd20 = L.polyline(
+                [[29.95, -90.07], [32.01, 120.86]],
+                {"bubblingMouseEvents": true, "color": "#2e8b57", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#2e8b57", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.75, "smoothFactor": 1.0, "stroke": true, "weight": 2.213758909949382}
+            ).addTo(map_02d2e7b74b481b229eef352e1a7746b4);
+        
+    
+        var popup_30bc60d859aa8dd16e4cbe1f56c3bfc5 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_93595a8120b30bf75efc734ff7be88de = $(`<div id="html_93595a8120b30bf75efc734ff7be88de" style="width: 100.0%; height: 100.0%;">US_NOLA → CN_NANTONG<br>margin: 17.5 USD/t<br>delivered: 307.1 | dest price: 324.6<br>freight: 72.8 | 21 days at sea</div>`)[0];
+                popup_30bc60d859aa8dd16e4cbe1f56c3bfc5.setContent(html_93595a8120b30bf75efc734ff7be88de);
+            
+        
+
+        poly_line_3ca06a70885c52b6a2258044e7cbbd20.bindPopup(popup_30bc60d859aa8dd16e4cbe1f56c3bfc5)
+        ;
+
+        
+    
+    
+            var poly_line_f4bccd33fc148cbd07d85e5b5387e19d = L.polyline(
+                [[29.95, -90.07], [51.95, 4.14]],
+                {"bubblingMouseEvents": true, "color": "#2e8b57", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#2e8b57", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.75, "smoothFactor": 1.0, "stroke": true, "weight": 3.3185975947917754}
+            ).addTo(map_02d2e7b74b481b229eef352e1a7746b4);
+        
+    
+        var popup_e40f11a726b052692afd3ee659e2719a = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_868dad0496f3ac40af7ab63781777ba7 = $(`<div id="html_868dad0496f3ac40af7ab63781777ba7" style="width: 100.0%; height: 100.0%;">US_NOLA → NL_ROTTERDAM<br>margin: 44.5 USD/t<br>delivered: 249.6 | dest price: 294.1<br>freight: 41.5 | 13 days at sea</div>`)[0];
+                popup_e40f11a726b052692afd3ee659e2719a.setContent(html_868dad0496f3ac40af7ab63781777ba7);
+            
+        
+
+        poly_line_f4bccd33fc148cbd07d85e5b5387e19d.bindPopup(popup_e40f11a726b052692afd3ee659e2719a)
+        ;
+
+        
+    
+    
+            var poly_line_9a1cd9cd2e64ccacf2106450c31e2e39 = L.polyline(
+                [[29.95, -90.07], [41.35, 2.16]],
+                {"bubblingMouseEvents": true, "color": "#2e8b57", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#2e8b57", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.75, "smoothFactor": 1.0, "stroke": true, "weight": 3.6135136516465667}
+            ).addTo(map_02d2e7b74b481b229eef352e1a7746b4);
+        
+    
+        var popup_3b77d89d78fcf8332fd78270b3edc6c5 = L.popup({
+  "maxWidth": 260,
+});
+
+        
+            
+                var html_09e1913b00a070b4a22ad9b5d2f5ec90 = $(`<div id="html_09e1913b00a070b4a22ad9b5d2f5ec90" style="width: 100.0%; height: 100.0%;">US_NOLA → ES_BARCELONA<br>margin: 51.8 USD/t<br>delivered: 255.8 | dest price: 307.5<br>freight: 47.2 | 14 days at sea</div>`)[0];
+                popup_3b77d89d78fcf8332fd78270b3edc6c5.setContent(html_09e1913b00a070b4a22ad9b5d2f5ec90);
+            
+        
+
+        poly_line_9a1cd9cd2e64ccacf2106450c31e2e39.bindPopup(popup_3b77d89d78fcf8332fd78270b3edc6c5)
+        ;
+
+        
+    
+</script>
+</html>

@@ -1,0 +1,451 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+
+\hypersetup{colorlinks=true, linkcolor=blue!50!black, citecolor=blue!50!black,
+            urlcolor=blue!50!black}
+
+\titleformat{\section}{\large\bfseries}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{0.6em}{}
+
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\small Geographic Arbitrage in Physical Commodity Markets}
+\lhead{\small \thepage}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{assumption}{Assumption}
+\theoremstyle{plain}
+\newtheorem{proposition}{Proposition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Var}{\operatorname{Var}}
+\newcommand{\Cov}{\operatorname{Cov}}
+\newcommand{\inprob}{\xrightarrow{p}}
+\newcommand{\indist}{\xrightarrow{d}}
+
+\title{\textbf{The Mathematics of Geographic Arbitrage\\ in Physical Commodity Markets}\\[4pt]
+\large A Rigorous Treatment with a Synthetic-Data Laboratory}
+\author{\textit{geo-arb} project documentation}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent
+Physical commodity merchants such as the large agricultural trading houses exist,
+in large part, to transform commodities across \emph{space}, \emph{time}, and
+\emph{form}. This document gives a self-contained, rigorous account of the
+\emph{spatial} (geographic) transformation: buying a commodity at one location
+and selling it at another. We formalise the delivered-cost identity, the
+spatial no-arbitrage band, and the Takayama--Judge spatial price equilibrium as
+a linear program whose dual variables are equilibrium location prices. We then
+specify a fully controlled stochastic data-generating process in which regional
+prices are \emph{cointegrated} through a common world factor, freight and basis
+are mean-reverting, and FX follows a random walk. Within this process we derive
+the distribution of the arbitrage margin and the conditions under which a
+window opens. The companion \texttt{geoarb} Python package implements every
+object defined here, so each proposition can be checked numerically against
+simulation. \textbf{All data are synthetic; nothing here is investment advice.}
+\end{abstract}
+
+\tableofcontents
+\bigskip
+
+%======================================================================
+\section{Setup: the spatial market}
+\label{sec:setup}
+
+We consider a single homogeneous commodity (say soybeans) traded across a
+finite set of locations partitioned into \emph{origins} (export ports) and
+\emph{destinations} (import ports).
+
+\begin{definition}[Spatial network]
+Let $\mathcal{O}=\{1,\dots,m\}$ index origins and $\mathcal{D}=\{1,\dots,n\}$
+index destinations. A \emph{lane} is an ordered pair $(i,j)\in\mathcal{O}\times
+\mathcal{D}$. Each lane has a great-circle distance $\delta_{ij}>0$ (nautical
+miles) and a voyage time $\tau_{ij}=\delta_{ij}/(24\,v)$ days for a vessel of
+speed $v$ knots.
+\end{definition}
+
+At each trading date $t\in\{0,1,\dots,T\}$ we observe:
+\begin{itemize}[topsep=2pt,itemsep=1pt]
+  \item origin local cash prices $P^{o}_{i,t}$ and destination cash prices
+        $P^{d}_{j,t}$ in USD per tonne;
+  \item per-tonne freight $f_{ij,t}$ on each lane;
+  \item port handling costs $h_i^o,\;h_j^d$;
+  \item an import tariff $\theta_{ij}\ge 0$;
+  \item an FX rate $e_{i,t}$ (USD per unit of origin $i$'s local currency);
+  \item a benchmark futures price $H_t$ on a reference exchange.
+\end{itemize}
+
+%======================================================================
+\section{Delivered cost and the arbitrage margin}
+\label{sec:delivered}
+
+The economic primitive is the \emph{delivered cost}: the all-in per-tonne cost,
+expressed at the destination, of sourcing the commodity at origin $i$ and
+landing it at destination $j$ at the time the cargo arrives.
+
+\begin{definition}[Delivered cost]
+\label{def:delivered}
+With financing rate $r$ (annualised, $360$-day convention), the delivered cost
+of lane $(i,j)$ initiated at date $t$ is
+\begin{equation}
+C_{ij,t}
+=\underbrace{\frac{P^{o}_{i,t}}{e_{i,t}}+h^o_i}_{\text{FOB cost}}
++\;f_{ij,t}+\theta_{ij}+h^d_j
++\;\underbrace{\Big(\tfrac{P^o_{i,t}}{e_{i,t}}+h^o_i\Big)\, r\,\tfrac{\tau_{ij}}{360}}_{\text{financing of cargo in transit}}.
+\label{eq:delivered}
+\end{equation}
+\end{definition}
+
+\begin{definition}[Arbitrage margin / window]
+The (gross) \emph{arbitrage margin} of lane $(i,j)$ at date $t$ is
+\begin{equation}
+M_{ij,t}\;=\;P^{d}_{j,t}\;-\;C_{ij,t}.
+\label{eq:margin}
+\end{equation}
+The lane's \emph{arbitrage window} is \emph{open} at $t$ if $M_{ij,t}>0$ and
+\emph{closed} otherwise.
+\end{definition}
+
+The margin (\ref{eq:margin}) is the per-tonne profit a trader books by buying
+FOB at $i$ and selling at $j$ today, ignoring price moves during transit;
+Section~\ref{sec:risk} restores that risk.
+
+%======================================================================
+\section{The spatial no-arbitrage band}
+\label{sec:noarb}
+
+\begin{assumption}[Frictional law of one price]
+\label{ass:lop}
+Capital is mobile and the number of potential shippers is large, so any lane
+with a strictly positive, riskless margin is exploited until the margin is
+competed away.
+\end{assumption}
+
+\begin{proposition}[Spatial no-arbitrage band]
+\label{prop:band}
+Under Assumption~\ref{ass:lop}, in a frictionless competitive equilibrium with
+no binding capacity constraints,
+\begin{equation}
+P^{d}_{j,t}-P^{o}_{i,t}/e_{i,t}\;\le\; h^o_i+f_{ij,t}+\theta_{ij}+h^d_j
++\Big(\tfrac{P^o_{i,t}}{e_{i,t}}+h^o_i\Big) r\tfrac{\tau_{ij}}{360}
+\qquad\forall (i,j),
+\label{eq:band}
+\end{equation}
+equivalently $M_{ij,t}\le 0$ for every lane, with equality on every lane that
+carries strictly positive flow.
+\end{proposition}
+
+\begin{proof}
+Suppose $M_{ij,t}>0$ for some lane. A trader shipping one extra tonne earns
+$M_{ij,t}>0$ at no risk, contradicting equilibrium under
+Assumption~\ref{ass:lop} unless the action is bounded. Competition drives
+$P^d_{j,t}$ down and $P^o_{i,t}$ up until $M_{ij,t}=0$. Lanes that remain
+strictly unprofitable ($M_{ij,t}<0$) carry no flow. Hence at equilibrium every
+active lane satisfies $M_{ij,t}=0$ and every lane satisfies
+$M_{ij,t}\le 0$, which is (\ref{eq:band}). \qed
+\end{proof}
+
+Equation~(\ref{eq:band}) is the \emph{spatial} version of the Law of One Price:
+prices at two locations may differ, but only up to the full cost of moving
+product between them. The width of the band is precisely the right-hand side of
+(\ref{eq:band}) --- the transfer cost --- and \emph{not} zero. This is why
+persistent price gaps between continents are not, by themselves, evidence of
+inefficiency.
+
+%======================================================================
+\section{Spatial price equilibrium as a linear program}
+\label{sec:spe}
+
+When capacity binds and many origins compete for many destinations, the
+equilibrium flow pattern solves the classical Takayama--Judge transportation
+problem.
+
+\begin{definition}[Spatial price equilibrium, LP form]
+Given supplies $s_i$, demands $d_j$, and delivered costs $C_{ij}$ at a fixed
+date, the competitive equilibrium flows $x_{ij}\ge 0$ solve
+\begin{equation}
+\begin{aligned}
+\max_{x\ge 0}\quad & \sum_{i\in\mathcal O}\sum_{j\in\mathcal D}\bigl(P^d_j-C_{ij}\bigr)x_{ij}\\
+\text{s.t.}\quad & \sum_{j} x_{ij}\le s_i &&(\lambda_i)\\
+                 & \sum_{i} x_{ij}\le d_j &&(\mu_j)
+\end{aligned}
+\label{eq:lp}
+\end{equation}
+where $\lambda_i,\mu_j\ge 0$ are the dual multipliers.
+\end{definition}
+
+\begin{theorem}[Duals are equilibrium prices]
+\label{thm:dual}
+Let $x^\star,(\lambda^\star,\mu^\star)$ be primal--dual optimal for
+(\ref{eq:lp}). Then complementary slackness gives, for every lane,
+\begin{equation}
+P^d_j - C_{ij}\;\le\;\lambda^\star_i+\mu^\star_j,
+\qquad\text{with equality whenever } x^\star_{ij}>0.
+\label{eq:cs}
+\end{equation}
+The shadow price $\lambda^\star_i$ is the marginal value of an extra tonne of
+supply at origin $i$, and $\mu^\star_j$ the marginal value of an extra tonne of
+demand at destination $j$. Active lanes earn exactly the spatial price
+difference implied by the duals; inactive lanes are weakly unprofitable.
+\end{theorem}
+
+\begin{proof}
+The Lagrangian of (\ref{eq:lp}) is
+$\mathcal L=\sum_{ij}(P^d_j-C_{ij})x_{ij}
+-\sum_i\lambda_i(\sum_j x_{ij}-s_i)-\sum_j\mu_j(\sum_i x_{ij}-d_j)$.
+Stationarity in $x_{ij}\ge 0$ (KKT) requires
+$P^d_j-C_{ij}-\lambda_i-\mu_j\le 0$, with equality when $x_{ij}>0$, which is
+(\ref{eq:cs}). The envelope theorem gives
+$\partial(\text{optimal value})/\partial s_i=\lambda^\star_i$ and
+$\partial/\partial d_j=\mu^\star_j$, the stated marginal valuations. \qed
+\end{proof}
+
+Theorem~\ref{thm:dual} makes Proposition~\ref{prop:band} precise in the
+capacity-constrained case: the no-arbitrage band holds \emph{lane by lane} with
+the duals replacing raw prices, and only the cheapest-to-serve origin--
+destination pairs carry flow. This is the mechanism by which competition
+``closes'' arbitrage windows even when a naive scan of prices shows many
+positive margins.
+
+%======================================================================
+\section{A controlled stochastic data-generating process}
+\label{sec:dgp}
+
+To study \emph{when} windows open we need a model of how prices, freight and FX
+co-move. We use a common-trend (factor) model that produces cointegrated
+regional prices, the empirically dominant feature of integrated commodity
+markets.
+
+\subsection{Prices: a common stochastic trend}
+
+\begin{definition}[World factor and location prices]
+Let the world factor follow a random walk with drift,
+\begin{equation}
+F_t = F_{t-1}+\nu+\eta_t,\qquad \eta_t\sim\mathcal N(0,\sigma_F^2)\ \text{iid}.
+\end{equation}
+Each location price is the common trend plus a constant intercept $a_k$ plus a
+stationary idiosyncratic spread $u_{k,t}$:
+\begin{equation}
+P_{k,t}=F_t+a_k+u_{k,t},\qquad
+u_{k,t}=\rho\,u_{k,t-1}+\varepsilon_{k,t},\quad |\rho|<1,
+\label{eq:price}
+\end{equation}
+with $\varepsilon_{k,t}\sim\mathcal N(0,\sigma_u^2)$ iid across $k,t$.
+\end{definition}
+
+\begin{proposition}[Regional prices are cointegrated]
+\label{prop:coint}
+For any two locations $k,\ell$, the spread
+$Z_{t}:=P_{k,t}-P_{\ell,t}$ is (covariance-)stationary; equivalently $P_{k}$ and
+$P_{\ell}$ are cointegrated $CI(1,1)$ with cointegrating vector $(1,-1)$.
+\end{proposition}
+
+\begin{proof}
+From (\ref{eq:price}), $Z_t=(a_k-a_\ell)+(u_{k,t}-u_{\ell,t})$. The common
+trend $F_t$ cancels. The difference of two independent stationary AR(1)
+processes is stationary, so $Z_t$ is stationary with mean $a_k-a_\ell$. Each
+$P_{k,t}$ is individually $I(1)$ because $F_t$ is a random walk. A stationary
+linear combination of $I(1)$ series is cointegration by definition. \qed
+\end{proof}
+
+\begin{corollary}[Mean reversion and half-life]
+The demeaned spread $\tilde Z_t:=Z_t-(a_k-a_\ell)$ obeys an AR(1) with
+coefficient $\rho$, so it mean-reverts with half-life
+\begin{equation}
+t_{1/2}=\frac{\ln(1/2)}{\ln|\rho|}.
+\end{equation}
+\end{corollary}
+
+\noindent
+The package function \texttt{metrics.cointegration\_check} estimates $\rho$ by
+OLS and reports $t_{1/2}$; on the default calibration ($\rho=0.92$) the
+predicted half-life is $\ln(0.5)/\ln(0.92)\approx 8.3$ days, matching the
+simulation output ($8.2$ days).
+
+\subsection{Freight and basis}
+
+Freight is volatile but does not trend without bound; we model log-freight as a
+seasonal mean-reverting (Ornstein--Uhlenbeck/AR(1)) process:
+\begin{equation}
+\ln f_{ij,t}=\ln \bar f_{ij}+A\sin\!\Big(\tfrac{2\pi t}{252}\Big)+g_{ij,t},
+\qquad g_{ij,t}=\phi\,g_{ij,t-1}+\xi_{ij,t}.
+\end{equation}
+The local \emph{basis} relative to the benchmark future is
+$b_{k,t}:=P_{k,t}-H_t$, where $H_t=\bar H+F_t+c\,t$ embeds a deterministic carry
+$c$. Because $H_t$ shares the world factor $F_t$, the basis $b_{k,t}=a_k+u_{k,t}
+-\bar H-c\,t$ inherits stationarity around its (carry-adjusted) mean.
+
+%======================================================================
+\section{Distribution of the arbitrage margin}
+\label{sec:dist}
+
+We can now describe the margin's law. Hold FX at $e_{i,t}\approx 1$ and write
+the transfer cost as
+$K_{ij,t}=h^o_i+f_{ij,t}+\theta_{ij}+h^d_j+\text{(financing)}$.
+
+\begin{proposition}[Margin decomposition]
+\label{prop:margindist}
+The arbitrage margin admits the decomposition
+\begin{equation}
+M_{ij,t}=\underbrace{(a_j-a_i)-\bar K_{ij}}_{\text{structural mean }\bar M_{ij}}
+\;+\;\underbrace{(u_{j,t}-u_{i,t})}_{\text{stationary spread}}
+\;-\;\underbrace{(f_{ij,t}-\bar f_{ij})}_{\text{freight shock}}
+\;+\;(\text{financing, tariff, FX terms}),
+\end{equation}
+where $\bar K_{ij}=\E[K_{ij,t}]$. Consequently $M_{ij,t}$ is stationary; the
+common world trend $F_t$ does \emph{not} enter, so margins do not inherit the
+nonstationarity of price levels.
+\end{proposition}
+
+\begin{proof}
+Substitute (\ref{eq:price}) and Definition~\ref{def:delivered} into
+(\ref{eq:margin}); the $F_t$ terms in $P^d_{j,t}$ and $P^o_{i,t}$ cancel exactly
+as in Proposition~\ref{prop:coint}. The remaining components are stationary
+(AR(1) spreads, mean-reverting freight) or deterministic, so $M_{ij,t}$ is
+stationary. \qed
+\end{proof}
+
+\begin{corollary}[Window-open probability]
+If the stationary part of $M_{ij,t}$ is approximately Gaussian with mean
+$\bar M_{ij}$ and standard deviation $\sigma_{M_{ij}}$, the long-run fraction of
+days the window is open is
+\begin{equation}
+\Pr(M_{ij,t}>0)\;\approx\;\Phi\!\Big(\tfrac{\bar M_{ij}}{\sigma_{M_{ij}}}\Big),
+\end{equation}
+where $\Phi$ is the standard normal CDF. Structurally short, cheap lanes
+($\bar M_{ij}>0$) are open most of the time; structurally unprofitable lanes
+($\bar M_{ij}<0$) open only on favourable spread/freight shocks.
+\end{corollary}
+
+This corollary is the quantitative content of ``the arb is mostly closed'': for
+a lane with $\bar M_{ij}<0$, windows are tail events driven by transitory
+dislocations in the basis spread or freight.
+
+%======================================================================
+\section{Trading under transit risk and the futures hedge}
+\label{sec:risk}
+
+A cargo booked at $t$ is sold only on arrival at $t+\tau_{ij}$. The
+\emph{realised} per-tonne PnL is therefore
+\begin{equation}
+\Pi_{ij,t}=P^d_{j,\,t+\tau_{ij}}-C_{ij,t},
+\end{equation}
+which differs from the signal $M_{ij,t}=P^d_{j,t}-C_{ij,t}$ by the destination
+price move during transit, $P^d_{j,t+\tau}-P^d_{j,t}$. Since $P^d_j$ contains
+the random walk $F$, this move has variance growing in $\tau$ --- the
+\emph{flat-price} risk of a physical position.
+
+\begin{proposition}[Futures hedge isolates the spatial spread]
+\label{prop:hedge}
+Sell one tonne of the benchmark future at $H_t$ when booking the cargo and buy
+it back at arrival. The hedged PnL is
+\begin{equation}
+\Pi^{h}_{ij,t}=\bigl(P^d_{j,t+\tau}-C_{ij,t}\bigr)+\bigl(H_t-H_{t+\tau}\bigr)
+= \underbrace{\bigl(b^d_{j,t+\tau}-(C_{ij,t}-H_t)\bigr)}_{\text{basis / spatial spread}}
+\;-\;c\,\tau,
+\end{equation}
+so the world-factor term $F$ cancels between $P^d_j$ and $H$, leaving a
+stationary basis spread plus a deterministic carry. The variance of $\Pi^h$ does
+\emph{not} grow with $\tau$, unlike the unhedged $\Pi$.
+\end{proposition}
+
+\begin{proof}
+Write $P^d_{j,t+\tau}=H_{t+\tau}+b^d_{j,t+\tau}$ by definition of basis.
+Substituting into $\Pi^h$ cancels $H_{t+\tau}$:
+$\Pi^h=H_{t+\tau}+b^d_{j,t+\tau}-C_{ij,t}+H_t-H_{t+\tau}
+=b^d_{j,t+\tau}-(C_{ij,t}-H_t)$. With $H_t=\bar H+F_t+ct$ the residual carry is
+$-c\tau$; all $F$ terms have cancelled. Basis is stationary
+(Section~\ref{sec:dgp}), so $\Var(\Pi^h)$ is bounded in $\tau$. \qed
+\end{proof}
+
+Proposition~\ref{prop:hedge} is the formal statement of why physical arbitrage
+desks hedge flat price with futures and trade the \emph{basis}: the hedge
+removes the unbounded random-walk risk and leaves exactly the mean-reverting
+spatial spread the trader has an informational edge on. The simulator
+(\texttt{simulator.ArbitrageSimulator}) implements both the unhedged and hedged
+PnL so the variance reduction can be measured directly.
+
+%======================================================================
+\section{From theory to the \texttt{geoarb} package}
+\label{sec:map}
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Object in this paper} & \textbf{Equation} & \textbf{Code} \\
+\midrule
+Network, voyage time & Def.~1 & \texttt{geography.py} \\
+Delivered cost $C_{ij,t}$ & (\ref{eq:delivered}) & \texttt{arbitrage.delivered\_cost} \\
+Arbitrage margin $M_{ij,t}$ & (\ref{eq:margin}) & \texttt{arbitrage.ArbitrageEngine} \\
+No-arbitrage band & Prop.~1 & \texttt{ArbitrageEngine.window\_stats} \\
+Spatial LP \& duals & (\ref{eq:lp}), Thm.~1 & \texttt{equilibrium.SpatialEquilibrium} \\
+Common-trend prices & (\ref{eq:price}) & \texttt{dgp.SyntheticDGP} \\
+Cointegration / half-life & Prop.~3, Cor.~1 & \texttt{metrics.cointegration\_check} \\
+Margin distribution & Prop.~4, Cor.~2 & \texttt{ArbitrageEngine.window\_stats} \\
+Hedged PnL & Prop.~5 & \texttt{simulator.ArbitrageSimulator} \\
+\bottomrule
+\end{tabular}
+\caption{Correspondence between the formal objects and the implementation.}
+\end{table}
+
+%======================================================================
+\section{Caveats and what the synthetic laboratory does \emph{not} prove}
+
+The simulator routinely reports high Sharpe ratios. This is a feature of the
+\emph{idealised} environment, not a claim about real markets. The synthetic
+laboratory deliberately omits: execution slippage and market impact;
+counterparty and demurrage risk; discrete, lumpy vessel availability;
+information asymmetry and adverse selection; credit and margin calls on the
+futures leg; and the fact that real basis is only partially predictable. Each
+omission, once restored, compresses the Sharpe toward the thin, hard-won
+margins that characterise the real physical-trading business. The value of the
+laboratory is pedagogical and structural: it lets one see \emph{exactly} which
+mechanism (cointegration, the no-arb band, the LP duals, the futures hedge)
+produces each observed feature, because every mechanism is written down in
+closed form.
+
+%======================================================================
+\section*{References (selected, for further reading)}
+\addcontentsline{toc}{section}{References}
+\small
+\begin{enumerate}[label={[\arabic*]},leftmargin=*]
+\item T.~Takayama and G.~G.~Judge, \emph{Spatial and Temporal Price and
+Allocation Models}, North-Holland, 1971.
+\item P.~A.~Samuelson, ``Spatial Price Equilibrium and Linear Programming,''
+\emph{American Economic Review}, 1952.
+\item R.~F.~Engle and C.~W.~J.~Granger, ``Co-integration and Error Correction,''
+\emph{Econometrica}, 1987.
+\item C.~Pirrong, \emph{The Economics of Commodity Trading Firms}, Trafigura
+white paper, 2014.
+\item H.~Working, ``The Theory of Price of Storage,'' \emph{American Economic
+Review}, 1949.
+\end{enumerate}
+
+\vfill
+\noindent\rule{\linewidth}{0.4pt}\\
+{\footnotesize\textbf{Disclaimer.} All prices, freight rates, FX, and flows in
+the companion software are synthetic and generated by the process of
+Section~\ref{sec:dgp}. This document is educational and is not investment,
+financial, or trading advice.}
+
+\end{document}
