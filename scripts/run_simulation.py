@@ -28,7 +28,7 @@ from geoarb import (
     ArbitrageEngine, SpatialEquilibrium,
     ArbitrageSimulator, SimConfig, performance_summary,
 )
-from geoarb.metrics import cointegration_check
+from geoarb.metrics import mean_reversion_check, adf_pvalue
 from geoarb import viz
 
 OUT = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "outputs")
@@ -53,10 +53,13 @@ def main():
     print(f"[2] Generated {len(data['prices'])} days of synthetic data")
 
     # cointegration sanity check on two origins
-    cc = cointegration_check(data["prices"], "BR_SANTOS", "AR_ROSARIO")
-    print(f"    Cointegration check {cc['pair']}: AR(1)={cc['ar1_coef']:.3f}, "
-          f"half-life={cc['half_life_days']:.1f}d, "
-          f"stationary={cc['stationary_like']}")
+    cc = mean_reversion_check(data["prices"], "BR_SANTOS", "AR_ROSARIO")
+    adf = adf_pvalue((data["prices"]["BR_SANTOS"]
+                      - data["prices"]["AR_ROSARIO"]).to_numpy())
+    print(f"    Mean-reversion {cc['pair']}: AR(1)={cc['ar1_coef']:.3f}, "
+          f"half-life={cc['half_life_days']:.1f}d")
+    print(f"    ADF stat={adf['adf_stat']:.2f} (5% crit {adf['crit_value_5pct']}); "
+          f"reject unit root: {adf['reject_unit_root_5pct']}")
 
     # 3) arbitrage windows
     engine = ArbitrageEngine(locations, routes, financing_rate=0.06)
@@ -75,18 +78,35 @@ def main():
     if not eq["flow_df"].empty:
         print("    Equilibrium flows:")
         print(eq["flow_df"].round(2).to_string(index=False))
+    # dual variables = equilibrium location prices (the pedagogical payoff)
+    print("    Shadow prices (equilibrium location values, USD/tonne):")
+    for code, sp in zip(origins, eq["supply_shadow"]):
+        print(f"      supply  {code:14s}: {sp:8.2f}")
+    for code, dp in zip(dests, eq["demand_shadow"]):
+        print(f"      demand  {code:14s}: {dp:8.2f}")
 
-    # 5) trading simulation
-    sim = ArbitrageSimulator(SimConfig(entry_threshold=4.0,
-                                       cargo_size=60_000,
-                                       capital=60_000_000,
-                                       hedge_with_futures=True))
-    sim_out = sim.run(arb, data["futures"])
-    perf = performance_summary(sim_out["equity"], sim_out["trades"],
-                               starting_capital=60_000_000)
-    print("\n[5] Strategy performance (hedged):")
-    for k, v in perf.items():
-        print(f"    {k:24s}: {v:,.2f}" if isinstance(v, float) else f"    {k:24s}: {v}")
+    # 5) trading simulation -- hedged vs unhedged, to expose flat-price risk
+    perf_by_mode = {}
+    sim_out = None
+    for hedged in (True, False):
+        sim = ArbitrageSimulator(SimConfig(entry_threshold=4.0,
+                                           cargo_size=60_000,
+                                           capital=60_000_000,
+                                           hedge_with_futures=hedged))
+        out = sim.run(arb, data["futures"])
+        perf = performance_summary(out["equity"], out["trades"],
+                                   starting_capital=60_000_000)
+        perf_by_mode["hedged" if hedged else "unhedged"] = perf
+        if hedged:
+            sim_out = out
+    print("\n[5] Strategy performance (hedged vs unhedged):")
+    keys = ["total_return_pct", "ann_vol_pct", "sharpe", "max_drawdown_pct",
+            "win_rate_pct", "n_trades"]
+    print(f"    {'metric':22s} {'hedged':>14s} {'unhedged':>14s}")
+    for k in keys:
+        h, u = perf_by_mode["hedged"][k], perf_by_mode["unhedged"][k]
+        print(f"    {k:22s} {h:14,.2f} {u:14,.2f}")
+    perf = perf_by_mode["hedged"]
 
     # 6) outputs
     print("\n[6] Writing visual + data outputs ...")

@@ -26,7 +26,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from geoarb import (build_default_network, SyntheticDGP, DGPConfig,
                     ArbitrageEngine, SpatialEquilibrium,
                     ArbitrageSimulator, SimConfig, performance_summary)
-from geoarb.metrics import cointegration_check
+from geoarb.metrics import mean_reversion_check
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ASSETS = os.path.join(ROOT, "assets")
@@ -125,7 +125,7 @@ def fig_prices_and_spread(data):
     spread = prices["BR_SANTOS"] - prices["AR_ROSARIO"]
     ax2.plot(prices["date"], spread, lw=1.0, color=BLUE)
     ax2.axhline(spread.mean(), color=RED, ls="--", lw=1.0, label="mean")
-    cc = cointegration_check(prices, "BR_SANTOS", "AR_ROSARIO")
+    cc = mean_reversion_check(prices, "BR_SANTOS", "AR_ROSARIO")
     ax2.set_title(f"Cointegrated spread Santos−Rosario  "
                   f"(AR(1)={cc['ar1_coef']:.2f}, half-life={cc['half_life_days']:.1f}d)")
     ax2.set_ylabel("USD/tonne"); ax2.legend(fontsize=8, loc="upper right")

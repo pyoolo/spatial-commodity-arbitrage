@@ -16,7 +16,7 @@ commodity markets, using synthetic data. It includes:
 The economics follow the Law of One Price and the spatial-arbitrage condition
 (Takayama & Judge spatial equilibrium). See paper/ for the rigorous treatment.
 
-Author: (your name)
+Author: pyoolo
 License: MIT
 """
 
@@ -29,9 +29,14 @@ from .arbitrage import (
 )
 from .equilibrium import SpatialEquilibrium
 from .simulator import ArbitrageSimulator, SimConfig
-from .metrics import performance_summary
+from .metrics import (
+    performance_summary,
+    mean_reversion_check,
+    cointegration_check,
+    adf_pvalue,
+)
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 __all__ = [
     "Location",
@@ -46,5 +51,8 @@ __all__ = [
     "ArbitrageSimulator",
     "SimConfig",
     "performance_summary",
+    "mean_reversion_check",
+    "cointegration_check",
+    "adf_pvalue",
     "__version__",
 ]

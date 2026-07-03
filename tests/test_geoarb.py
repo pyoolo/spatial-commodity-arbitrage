@@ -13,7 +13,7 @@ from geoarb import (build_default_network, SyntheticDGP, DGPConfig,
                     SimConfig, performance_summary)
 from geoarb.geography import haversine_nm
 from geoarb.arbitrage import delivered_cost, transit_days
-from geoarb.metrics import cointegration_check
+from geoarb.metrics import mean_reversion_check, adf_pvalue
 
 
 def test_network_shape():
@@ -39,10 +39,18 @@ def test_dgp_reproducible():
 
 def test_dgp_cointegration_stationary():
     data = SyntheticDGP(DGPConfig(n_days=750, seed=1)).generate()
-    cc = cointegration_check(data["prices"], "BR_SANTOS", "AR_ROSARIO")
+    cc = mean_reversion_check(data["prices"], "BR_SANTOS", "AR_ROSARIO")
     # spread should be mean-reverting (AR1 coef below 1)
     assert cc["ar1_coef"] < 1.0
-    assert cc["stationary_like"]
+    assert cc["mean_reverting"]
+
+
+def test_adf_rejects_unit_root_on_stationary_spread():
+    data = SyntheticDGP(DGPConfig(n_days=750, seed=1)).generate()
+    spread = (data["prices"]["BR_SANTOS"]
+              - data["prices"]["AR_ROSARIO"]).to_numpy()
+    res = adf_pvalue(spread)
+    assert res["reject_unit_root_5pct"]
 
 
 def test_delivered_cost_monotone_in_freight():
@@ -83,6 +91,34 @@ def test_simulator_runs_and_metrics():
                                starting_capital=5e7)
     assert "sharpe" in perf
     assert out["equity"].shape[0] == len(data["prices"])
+
+
+def test_equity_is_marked_to_market():
+    data = SyntheticDGP(DGPConfig(n_days=300, seed=11)).generate()
+    arb = ArbitrageEngine().compute(data)
+    out = ArbitrageSimulator(SimConfig(capital=5e7)).run(arb, data["futures"])
+    # MTM column exists and is non-trivially populated while cargoes are open
+    assert "unrealised_pnl" in out["equity"].columns
+    assert (out["equity"]["unrealised_pnl"].abs() > 0).any()
+
+
+def test_upfront_capital_below_delivered_cost():
+    # cash locked at booking (FOB + financing) must be < full delivered cost
+    data = SyntheticDGP(DGPConfig(n_days=120, seed=3)).generate()
+    arb = ArbitrageEngine().compute(data)
+    sim = ArbitrageSimulator(SimConfig())
+    row = arb.iloc[0]
+    upfront = sim._upfront_capital(row) / sim.cfg.cargo_size
+    assert upfront < row["delivered_cost"]
+
+
+def test_no_same_day_arrival():
+    data = SyntheticDGP(DGPConfig(n_days=200, seed=5)).generate()
+    arb = ArbitrageEngine().compute(data)
+    out = ArbitrageSimulator(SimConfig()).run(arb, data["futures"])
+    if not out["trades"].empty:
+        assert (out["trades"]["arrival_date"]
+                > out["trades"]["entry_date"]).all()
 
 
 def test_transit_days_positive():

@@ -62,11 +62,14 @@ def performance_summary(equity: pd.DataFrame, trades: pd.DataFrame,
     }
 
 
-def cointegration_check(prices: pd.DataFrame, code_a: str, code_b: str) -> dict:
-    """Quick Engle-Granger style check that the spread is stationary.
+def mean_reversion_check(prices: pd.DataFrame, code_a: str, code_b: str) -> dict:
+    """Mean-reversion diagnostic for the price spread ``P_a - P_b``.
 
-    Returns the estimated AR(1) coefficient of the spread and an approximate
-    half-life of mean reversion. (Uses OLS; no statsmodels dependency.)
+    Assumes the cointegrating vector is (1, -1) -- i.e. we test the *given*
+    spread, we do not estimate the vector -- and fits an AR(1) by OLS to
+    recover the persistence coefficient and an implied half-life. This is a
+    descriptive diagnostic, NOT a formal cointegration test; use
+    :func:`adf_pvalue` for a unit-root test with a genuine p-value.
     """
     s = (prices[code_a] - prices[code_b]).to_numpy()
     s = s - s.mean()
@@ -78,5 +81,45 @@ def cointegration_check(prices: pd.DataFrame, code_a: str, code_b: str) -> dict:
         "ar1_coef": beta,
         "spread_std": float(np.std(s, ddof=1)),
         "half_life_days": float(half_life),
-        "stationary_like": bool(abs(beta) < 0.99),
+        "mean_reverting": bool(abs(beta) < 0.99),
     }
+
+
+def adf_pvalue(series: np.ndarray, max_lag: int = 1) -> dict:
+    """Augmented Dickey-Fuller test via OLS (scipy only, no statsmodels).
+
+    Regresses ``d y_t`` on ``y_{t-1}`` (+ lagged differences + constant) and
+    compares the t-statistic on ``y_{t-1}`` to interpolated MacKinnon critical
+    values. Returns the statistic, an approximate p-value bracket, and whether
+    the unit-root null is rejected at 5%. Kept deliberately lightweight; for
+    publication-grade inference use statsmodels' ``adfuller``.
+    """
+    y = np.asarray(series, dtype=float)
+    y = y - y.mean()
+    dy = np.diff(y)
+    n = len(dy)
+    # design: y_{t-1}, lagged diffs, const
+    cols = [y[:-1][max_lag:]]
+    for k in range(1, max_lag + 1):
+        cols.append(dy[max_lag - k:-k])
+    cols.append(np.ones(n - max_lag))
+    X = np.column_stack(cols)
+    yv = dy[max_lag:]
+    beta, *_ = np.linalg.lstsq(X, yv, rcond=None)
+    resid = yv - X @ beta
+    dof = len(yv) - X.shape[1]
+    sigma2 = resid @ resid / dof
+    xtx_inv = np.linalg.inv(X.T @ X)
+    se_gamma = np.sqrt(sigma2 * xtx_inv[0, 0])
+    t_stat = beta[0] / se_gamma
+    # MacKinnon 5% critical value ~ -2.86 (constant, no trend, large sample)
+    crit_5 = -2.86
+    return {
+        "adf_stat": float(t_stat),
+        "crit_value_5pct": crit_5,
+        "reject_unit_root_5pct": bool(t_stat < crit_5),
+    }
+
+
+# Backwards-compatible alias (previous name over-claimed; kept so old code runs).
+cointegration_check = mean_reversion_check

@@ -9,7 +9,7 @@
 
 ![python](https://img.shields.io/badge/python-3.10%2B-blue)
 ![license](https://img.shields.io/badge/license-MIT-green)
-![tests](https://img.shields.io/badge/tests-9%20passing-brightgreen)
+![tests](https://img.shields.io/badge/tests-13%20passing-brightgreen)
 ![data](https://img.shields.io/badge/data-synthetic-orange)
 
 ---
@@ -63,8 +63,10 @@ drawdown:
 
 ![equity curve](assets/equity_curve.png)
 
-> The interactive versions (folium map + plotly dashboard) are written to
-> `outputs/*.html` by `scripts/run_simulation.py` — open them in a browser.
+> The interactive versions (folium map + plotly dashboard) and CSV panels are
+> generated into `outputs/` by `make sim` and are **not committed** to the repo
+> — run it locally and open the HTML in a browser. The static PNGs above are
+> produced by `make figures`.
 
 ---
 
@@ -162,13 +164,22 @@ Full derivations and proofs: [`paper/geographic_arbitrage.pdf`](paper/geographic
 
 ## ⚠️ Important caveats
 
-The simulator reports flattering Sharpe ratios. **That is an artefact of an
-idealised world**, not a claim about reality. The lab deliberately omits
-execution slippage, market impact, lumpy vessel availability, counterparty &
-demurrage risk, margin calls on the futures leg, and the limited predictability
-of real basis. Restoring any of these compresses returns toward the thin,
-hard-won margins of the real physical-trading business. The point of the toolkit
-is **structural clarity**, not return forecasting.
+The simulator still reports flattering Sharpe ratios (~4 with mark-to-market
+equity). **That is an artefact of an idealised world**, not a claim about
+reality. The lab deliberately omits execution slippage, market impact, lumpy
+vessel availability, counterparty & demurrage risk, margin calls on the futures
+leg, and the limited predictability of real basis. Restoring any of these
+compresses returns toward the thin, hard-won margins of the real
+physical-trading business. The point of the toolkit is **structural clarity**,
+not return forecasting.
+
+`make sim` runs the strategy both **hedged and unhedged** side by side so the
+effect of the futures hedge is visible directly: it trims drawdown and lifts the
+win rate by stripping out flat-price risk, leaving the mean-reverting spatial
+spread the trader is actually long. Equity is **marked to market** daily (open
+cargoes are revalued at the current lane margin, not frozen at cost), so the
+volatility and drawdown figures reflect in-transit risk rather than settlement
+jumps.
 
 ---
 
